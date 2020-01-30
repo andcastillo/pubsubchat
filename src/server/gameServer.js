@@ -45,11 +45,25 @@ app.get('/leave', function(req, res) {
 })
 
 app.get('/domove', function(req, res){
+    let data = req.query;//JSON.parse(req.query.data.replace(/'/g, '"'));
+    log(data)
+    datastorate.writeData('p2pgames', data).then(async function(result) {
+        /*let gameid = result._path.segments[1];
+        await notification.createChatClient(data.player1);
+        await notification.createChatClient(data.player2);
+
+        //Notify both players about the begining of the game. The player starting the game will see the initial state. The second player must see null
+        await notification.sendMessage(data.player1, {gameid, vs: data.player2, name: data.name, state: game.init()}, 'p2pgames');
+        await notification.sendMessage(data.player2, {gameid, vs: data.player2, name: data.name}, 'p2pgames');
+        */
+
+        res.send('OK');
+    })
     //1. Verify the current movement agains the logic of the game and the state in the backend storage
     //2. Update the backend storage
     //3. Notify the next player thread about the current state of the game
 });
 
-app.listen(3000, () => {console.log('App listening on port 3000')} );
+app.listen(443, () => {console.log('App listening on port 3000')} );
 
 //http://localhost:3000/newgame/?player1=amc&player2=mcf&name=hex&state:[]}

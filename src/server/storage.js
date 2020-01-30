@@ -1,6 +1,6 @@
 const admin = require('firebase-admin');
 
-let serviceAccount = require('/home/acastillo/.ssh/firebase.json');
+let serviceAccount = require('/home/andcastillo/.ssh/firebase.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)

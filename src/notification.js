@@ -5,7 +5,7 @@ const log = require('./logger')
 const { PubSub } = require('@google-cloud/pubsub');
 
 const credentials = {
-  keyFilename: '/home/andcastillo/.ssh/backup.json',
+  keyFilename: '/home/acastillo/.ssh/backup.json',
   projectId: 'shareapp-1546879226834',
 };
 

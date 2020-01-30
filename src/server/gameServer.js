@@ -2,16 +2,18 @@ const express = require('express');
 
 const datastorate = require('./storage');
 const notification = require('../notification');
+const { PubSub } = require('@google-cloud/pubsub');
 const log = require('../logger');
 const app = express();
 const game = require('./tictactoe');
 
+const masterID = 'p2pgames';
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
     res.send('hello world')
 });
 
-app.get('/newgame', function(req, res) {
+app.get('/newgame', function (req, res) {
     // Register the new game for the given clientIDs. 
     //{client1, client2, game: {name, gameID, state, gameLogic}}
     //Steps:
@@ -21,49 +23,66 @@ app.get('/newgame', function(req, res) {
     //let data = {player1: 'player1', player2: 'player2', name: 'hex', state: []};
     let data = req.query;//JSON.parse(req.query.data.replace(/'/g, '"'));
     log(data)
-    datastorate.writeData('p2pgames', data).then(async function(result) {
+    datastorate.writeData(masterID, data).then(async function (result) {
         let gameid = result._path.segments[1];
         await notification.createChatClient(data.player1);
         await notification.createChatClient(data.player2);
 
         //Notify both players about the begining of the game. The player starting the game will see the initial state. The second player must see null
-        await notification.sendMessage(data.player1, {gameid, vs: data.player2, name: data.name, state: game.init()}, gameid);
-        await notification.sendMessage(data.player2, {gameid, vs: data.player2, name: data.name}, gameid);
+        await notification.sendMessage(data.player1, { gameid, next: data.player2, name: data.name, state: game.init() }, masterID);
+        await notification.sendMessage(data.player2, { gameid, next: data.player1, name: data.name }, masterID);
 
         res.send('New ' + data.name + ' has been created with ID: ' + gameid);
     })
 });
 
-app.get('/register', function(req, res) {
+app.get('/register', function (req, res) {
     //TODO register a new player for a game (clientID, gameID, options)
 });
 
-app.get('/leave', function(req, res) {
+app.get('/leave', function (req, res) {
     //TODO release the clientID ending any active game
     //1. Mark any current game in the backed storage as finished
     //2. Clean the pubsub chanel for this clienID
 })
 
-app.get('/domove', function(req, res){
-    let data = req.query;//JSON.parse(req.query.data.replace(/'/g, '"'));
-    log(data)
-    datastorate.writeData('p2pgames', data).then(async function(result) {
-        /*let gameid = result._path.segments[1];
-        await notification.createChatClient(data.player1);
-        await notification.createChatClient(data.player2);
+let argv = process.argv.slice(2)
+let port = argv[0];
+app.listen(port, () => {
+    log(`App listening on port ${port}`);
 
-        //Notify both players about the begining of the game. The player starting the game will see the initial state. The second player must see null
-        await notification.sendMessage(data.player1, {gameid, vs: data.player2, name: data.name, state: game.init()}, 'p2pgames');
-        await notification.sendMessage(data.player2, {gameid, vs: data.player2, name: data.name}, 'p2pgames');
-        */
-
-        res.send('OK');
-    })
-    //1. Verify the current movement agains the logic of the game and the state in the backend storage
-    //2. Update the backend storage
-    //3. Notify the next player thread about the current state of the game
 });
 
-app.listen(443, () => {console.log('App listening on port 3000')} );
-
 //http://localhost:3000/newgame/?player1=amc&player2=mcf&name=hex&state:[]}
+const credentials = {
+    keyFilename: '/home/acastillo/.ssh/backup.json',
+    projectId: 'shareapp-1546879226834',
+};
+
+const pubsub = new PubSub(credentials);
+
+function listenForMessages(subscriptionName, timeout) {
+
+    // References an existing subscription
+    const subscription = pubsub.subscription(subscriptionName + '_');
+
+    // Create an event handler to handle messages
+    const messageHandler = message => {
+        log(message.data.toString())
+        let data = JSON.parse(message.data.toString());
+        let promise = notification.sendMessage(data.next, { gameid: data.gameid, next: message.attributes.sender, name: data.name, state: data.state }, masterID);
+        promise.then(() => {
+            // "Ack" (acknowledge receipt of) the message
+            message.ack();
+        });
+    };
+    // Listen for new messages until timeout is hit
+    subscription.on(`message`, messageHandler);
+
+    setTimeout(() => {
+        subscription.removeListener('message', messageHandler);
+        log(`${messageCount} message(s) received.`);
+    }, timeout * 1000);
+}
+
+listenForMessages(masterID, 60000);

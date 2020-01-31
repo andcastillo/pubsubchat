@@ -53,7 +53,18 @@ app.listen(port, () => {
 
 });
 
-//http://localhost:3000/newgame/?player1=amc&player2=mcf&name=hex&state:[]
+// http://localhost:3000/newgame/?player1=geo&player2=and&name=hex&state:[]
+// node src/chat/tictactoeClient.js geo
+// node src/chat/tictactoeClient.js and
+/*
+[[0,0,0],[0,1,0],[0,0,0]]
+[[0,0,0],[0,1,0],[0,2,0]]
+[[0,0,0],[0,1,0],[0,2,1]]
+[[2,0,0],[0,1,0],[0,2,1]]
+[[2,0,0],[0,1,1],[0,2,1]]
+[[2,0,0],[2,1,1],[0,2,1]]
+[[2,0,1],[2,1,1],[0,2,1]]
+*/
 const credentials = {
     keyFilename: '/home/acastillo/.ssh/backup.json',
     projectId: 'shareapp-1546879226834',

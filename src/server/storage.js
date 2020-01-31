@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const log = require('../logger');
 
 let serviceAccount = require('/home/acastillo/.ssh/firebase.json');
 
@@ -14,12 +15,21 @@ let db = admin.firestore();
  * @param {*} data 
  * @param {*} document 
  */
-function writeData(collection, data, document) {
-    if (document) {
-        return db.collection(collection).doc(document).set(data);
-    } else {
-        return db.collection(collection).add(data);
+function writeData(collection, data, document, field) {
+    try {
+        if (document) {
+            if (field) {
+                return db.collection(collection).doc(document).collection(field).add(data);
+            } else {
+                return db.collection(collection).doc(document).set(data);
+            }
+        } else {
+            return db.collection(collection).add(data);
+        }
+    } catch(e) {
+        log(e);
     }
+    
    
 }
 

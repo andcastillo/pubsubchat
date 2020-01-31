@@ -29,7 +29,7 @@ app.get('/newgame', function (req, res) {
         await notification.createChatClient(data.player2);
 
         //Notify both players about the begining of the game. The player starting the game will see the initial state. The second player must see null
-        await notification.sendMessage(data.player1, { gameid, next: data.player2, name: data.name, state: game.init() }, masterID);
+        await notification.sendMessage(data.player1, { gameid, next: data.player2, name: data.name, state: game.init(), index: 0 }, masterID);
         await notification.sendMessage(data.player2, { gameid, next: data.player1, name: data.name }, masterID);
 
         res.send('New ' + data.name + ' has been created with ID: ' + gameid);
@@ -53,7 +53,7 @@ app.listen(port, () => {
 
 });
 
-//http://localhost:3000/newgame/?player1=amc&player2=mcf&name=hex&state:[]}
+//http://localhost:3000/newgame/?player1=amc&player2=mcf&name=hex&state:[]
 const credentials = {
     keyFilename: '/home/acastillo/.ssh/backup.json',
     projectId: 'shareapp-1546879226834',
@@ -70,8 +70,12 @@ function listenForMessages(subscriptionName, timeout) {
     const messageHandler = message => {
         log(message.data.toString())
         let data = JSON.parse(message.data.toString());
-        let promise = notification.sendMessage(data.next, { gameid: data.gameid, next: message.attributes.sender, name: data.name, state: data.state }, masterID);
+        let promise = notification.sendMessage(data.next, { gameid: data.gameid, next: message.attributes.sender, name: data.name, state: data.state, index: data.index + 1 }, masterID);
         promise.then(() => {
+            datastorate.writeData(masterID, 
+                {state: JSON.stringify(data.state), sender: message.attributes.sender, index: data.index + 1}, data.gameid, 'states')
+                .then(() => log(`Updated states of document ${data.gameid}`))
+                .catch(e => log(e))
             // "Ack" (acknowledge receipt of) the message
             message.ack();
         });

@@ -7,7 +7,10 @@ const log = require('../logger');
 const app = express();
 const game = require('./tictactoe');
 
-const masterID = 'p2pgames';
+let argv = process.argv.slice(2)
+const port = argv[0];
+const masterID =  argv[1];
+
 
 app.get('/', function (req, res) {
     res.send('hello world')
@@ -36,18 +39,6 @@ app.get('/newgame', function (req, res) {
     })
 });
 
-app.get('/register', function (req, res) {
-    //TODO register a new player for a game (clientID, gameID, options)
-});
-
-app.get('/leave', function (req, res) {
-    //TODO release the clientID ending any active game
-    //1. Mark any current game in the backed storage as finished
-    //2. Clean the pubsub chanel for this clienID
-})
-
-let argv = process.argv.slice(2)
-let port = argv[0];
 app.listen(port, () => {
     log(`App listening on port ${port}`);
 

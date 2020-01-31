@@ -22,6 +22,7 @@ function listenForMessages(subscriptionName, timeout) {
     let messageCount = 0;
     const messageHandler = message => {
         state = message;
+        //notification.sendMessage(message.attributes.sender, Object.assign({}, JSON.parse(state.data.toString()), {state:miagente(state.data)}), clientID);
         log(`\t${message.attributes.sender} < ${message.data}`);
         messageCount += 1;
         // "Ack" (acknowledge receipt of) the message
@@ -54,6 +55,6 @@ stdin.on('data', function (text) {
         console.log("Good bye, master");
         process.exit();
     } else {
-        notification.sendMessage('p2pgames', Object.assign({}, JSON.parse(state.data.toString()), {state:JSON.parse(text)}), clientID);
+        notification.sendMessage(message.attributes.sender, Object.assign({}, JSON.parse(state.data.toString()), {state:JSON.parse(text)}), clientID);
     }
 });

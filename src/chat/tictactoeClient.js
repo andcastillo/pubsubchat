@@ -55,6 +55,6 @@ stdin.on('data', function (text) {
         console.log("Good bye, master");
         process.exit();
     } else {
-        notification.sendMessage(message.attributes.sender, Object.assign({}, JSON.parse(state.data.toString()), {state:JSON.parse(text)}), clientID);
+        notification.sendMessage(state.attributes.sender, Object.assign({}, JSON.parse(state.data.toString()), {state:JSON.parse(text)}), clientID);
     }
 });

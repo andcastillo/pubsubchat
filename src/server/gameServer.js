@@ -8,7 +8,7 @@ const app = express();
 const game = require('./tictactoe');
 
 let argv = process.argv.slice(2)
-const port = argv[0];
+const port = argv[0] * 1;
 const masterID =  argv[1];
 
 
@@ -41,7 +41,9 @@ app.get('/newgame', function (req, res) {
 
 app.listen(port, () => {
     log(`App listening on port ${port}`);
-
+    notification.createChatClient(masterID).then(() => {
+        listenForMessages(masterID, 60000);
+    });
 });
 
 // http://localhost:3000/newgame/?player1=geo&player2=and&name=hex&state:[]
@@ -90,5 +92,3 @@ function listenForMessages(subscriptionName, timeout) {
         log(`${messageCount} message(s) received.`);
     }, timeout * 1000);
 }
-
-listenForMessages(masterID, 60000);

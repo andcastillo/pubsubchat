@@ -45,8 +45,8 @@ app.listen(port, () => {
         listenForMessages(masterID, 60000);
     });
 });
-
-// http://localhost:3000/newgame/?player1=geo&player2=and&name=hex&state:[]
+// node src/server/gameServer.js 3000 andres
+// http://localhost:3000/newgame/?player1=pl1&player2=pl2&name=hex&state:[]
 // node src/chat/tictactoeClient.js geo
 // node src/chat/tictactoeClient.js and
 /*

@@ -6,12 +6,14 @@ const { PubSub } = require('@google-cloud/pubsub');
 const notification = require('../notification');
 const log = require('../logger')
 
-const credentials = {
+/*const credentials = {
     keyFilename: '/home/acastillo/.ssh/backup.json',
     projectId: 'shareapp-1546879226834',
 };
 
-const pubsub = new PubSub(credentials);
+const pubsub = new PubSub(credentials);*/
+const pubsub = new PubSub();
+
 let state = {};
 
 function listenForMessages(subscriptionName, timeout) {

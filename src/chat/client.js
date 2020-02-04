@@ -5,12 +5,13 @@ var stdin = process.stdin;
 const { PubSub } = require('@google-cloud/pubsub');
 const notification = require('../notification');
 
-const credentials = {
+/*const credentials = {
     keyFilename: '/home/acastillo/.ssh/backup.json',
     projectId: 'shareapp-1546879226834',
-};
+};*/
 
-const pubsub = new PubSub(credentials);
+//const pubsub = new PubSub(credentials);
+const pubsub = new PubSub();
 
 function listenForMessages(subscriptionName, timeout, process) {
     // References an existing subscription

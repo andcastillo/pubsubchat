@@ -4,13 +4,13 @@ const log = require('./logger')
 
 const { PubSub } = require('@google-cloud/pubsub');
 
-const credentials = {
+/*const credentials = {
   keyFilename: '/home/acastillo/.ssh/backup.json',
   projectId: 'shareapp-1546879226834',
-};
+};*/
 
-const pubSubClient = new PubSub(credentials);
-
+//const pubSubClient = new PubSub(credentials);
+const pubSubClient = new PubSub();
 
 async function createChatClient(clientID) {
   try {

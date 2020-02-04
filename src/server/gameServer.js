@@ -58,12 +58,13 @@ app.listen(port, () => {
 [[2,0,0],[2,1,1],[0,2,1]]
 [[2,0,1],[2,1,1],[0,2,1]]
 */
-const credentials = {
+/*const credentials = {
     keyFilename: '/home/acastillo/.ssh/backup.json',
     projectId: 'shareapp-1546879226834',
-};
+};*/
 
-const pubsub = new PubSub(credentials);
+//const pubsub = new PubSub(credentials);
+const pubsub = new PubSub();
 
 function listenForMessages(subscriptionName, timeout) {
 

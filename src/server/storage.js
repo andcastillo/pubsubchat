@@ -3,9 +3,9 @@ const log = require('../logger');
 
 let serviceAccount = require('/home/acastillo/.ssh/firebase.json');
 
-admin.initializeApp({
+/*admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
-});
+});*/
 
 let db = admin.firestore();
 

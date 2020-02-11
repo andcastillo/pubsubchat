@@ -3,9 +3,9 @@ const log = require('../logger');
 
 let serviceAccount = require('/home/acastillo/.ssh/firebase.json');
 
-/*admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});*/
+admin.initializeApp(
+//    {credential: admin.credential.cert(serviceAccount)}
+);
 
 let db = admin.firestore();
 
@@ -33,10 +33,14 @@ function writeData(collection, data, document, field) {
    
 }
 
-function readData(db) {
-
+function getCollection(collection) {
+    return db.collection(collection);
 }
 
-module.exports = {writeData, readData};
+function getDocumentInCollection(collection, doc) {
+    return db.collection(collection).doc(doc);
+}
+
+module.exports = {writeData, getCollection, getDocumentInCollection};
 
 //writeData('p2pgames', {player1: 'amc2', player2: 'ljb2'}, 'gameTest').then(res => console.log(res))

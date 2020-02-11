@@ -11,6 +11,7 @@ let argv = process.argv.slice(2)
 const port = argv[0] * 1;
 const masterID =  argv[1];
 
+app.use(express.static('../../public'));
 
 app.get('/', function (req, res) {
     res.send('hello world')
@@ -38,6 +39,12 @@ app.get('/newgame', function (req, res) {
         res.send('New ' + data.name + ' has been created with ID: ' + gameid);
     })
 });
+
+app.get('/getstate', function (req, res) {
+    let data = req.query;
+    res.send(datastorate.getCollection(data.gameid).toString());
+});
+
 
 app.listen(port, () => {
     log(`App listening on port ${port}`);

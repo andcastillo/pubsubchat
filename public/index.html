@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <h1>Tic-Tac Toe</h1>
+    <p>Print the last state of the game</p>
+    <textarea name="textarea" rows="10" cols="50" id="gameobject"></textarea>
+    <button onclick="updateGame()">
+        Check state
+    </button>
+    <script>
+        function updateGame() {
+            $.ajax({
+                url: 'http://localhost:3000/getstate/?gameid=U19d6lGhXm97GVJIju1x',
+                success: data => {
+                    document.getElementById("gameobject").innerHTML = data;
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

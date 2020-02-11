@@ -52,6 +52,8 @@ app.listen(port, () => {
         listenForMessages(masterID, 60000);
     });
 });
+
+// export GOOGLE_APPLICATION_CREDENTIALS=~/.ssh/backup.json"
 // node src/server/gameServer.js 3000 andres
 // http://localhost:3000/newgame/?player1=pl1&player2=pl2&name=hex&state:[]
 // node src/chat/tictactoeClient.js geo

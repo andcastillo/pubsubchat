@@ -16,7 +16,7 @@
     <script>
         function updateGame() {
             $.ajax({
-                url: 'http://localhost:3000/getstate/?gameid=U19d6lGhXm97GVJIju1x',
+                url: 'http://localhost:3000/getlaststate/?gameid=U19d6lGhXm97GVJIju1x',
                 success: data => {
                     document.getElementById("gameobject").innerHTML = JSON.stringify(data);
                 }

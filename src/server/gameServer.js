@@ -40,13 +40,21 @@ app.get('/newgame', function (req, res) {
     })
 });
 
-app.get('/getstate', function (req, res) {
+app.get('/getlaststate', function (req, res) {
     let data = req.query;
-    datastorate.getStates(masterID, data.gameid, res).then(result => {
+    //datastorate.getStates(masterID, data.gameid, res).then(result => {
+    datastorate.getLastState(masterID, data.gameid, res).then(result => {
         res.send(result);
     });
 });
 
+app.get('/getstates', function (req, res) {
+    let data = req.query;
+    //datastorate.getStates(masterID, data.gameid, res).then(result => {
+    datastorate.getLastState(masterID, data.gameid, res).then(result => {
+        res.send(result);
+    });
+});
 
 app.listen(port, () => {
     log(`App listening on port ${port}`);

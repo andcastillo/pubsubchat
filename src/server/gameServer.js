@@ -42,7 +42,9 @@ app.get('/newgame', function (req, res) {
 
 app.get('/getstate', function (req, res) {
     let data = req.query;
-    res.send(datastorate.getDocumentInCollection(masterID, data.gameid));
+    datastorate.getStates(masterID, data.gameid).then(result => {
+        res.send(result);
+    });
 });
 
 
@@ -55,7 +57,7 @@ app.listen(port, () => {
 
 // export GOOGLE_APPLICATION_CREDENTIALS=~/.ssh/backup.json"
 // node src/server/gameServer.js 3000 andres
-// http://localhost:3000/newgame/?player1=pl1&player2=pl2&name=hex&state:[]
+// http://localhost:3000/newgame/?player1=pl1&player2=pl2&name=hex&state=[]
 // node src/chat/tictactoeClient.js geo
 // node src/chat/tictactoeClient.js and
 /*

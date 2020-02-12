@@ -18,7 +18,7 @@
             $.ajax({
                 url: 'http://localhost:3000/getstate/?gameid=U19d6lGhXm97GVJIju1x',
                 success: data => {
-                    document.getElementById("gameobject").innerHTML = data.length;
+                    document.getElementById("gameobject").innerHTML = JSON.stringify(data);
                 }
             });
         }

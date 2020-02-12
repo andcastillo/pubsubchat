@@ -1,7 +1,7 @@
 const admin = require('firebase-admin');
 const log = require('../logger');
 
-let serviceAccount = require('/home/acastillo/.ssh/firebase.json');
+//let serviceAccount = require('/home/acastillo/.ssh/firebase.json');
 
 admin.initializeApp(
 //    {credential: admin.credential.cert(serviceAccount)}
@@ -37,10 +37,24 @@ function getCollection(collection) {
     return db.collection(collection);
 }
 
-function getDocumentInCollection(collection, doc) {
-    return db.collection(collection).doc(doc);
+function getStates(collection, doc) {
+    return db.collection(collection).doc(doc).collection('states').where('index', '>', 0).get().then(snapshot => {
+        //log(snapshot)
+        if (snapshot.empty) {
+          log('No matching documents.');
+          return;
+        } 
+        let result = [];
+        snapshot.forEach(function(docx) {
+            result.push({id: docx.id, data: docx.data()});
+        }); 
+        return result;
+      })
+      .catch(err => {
+        log('Error getting documents', err);
+      });
 }
 
-module.exports = {writeData, getCollection, getDocumentInCollection};
+module.exports = {writeData, getCollection, getStates};
 
 //writeData('p2pgames', {player1: 'amc2', player2: 'ljb2'}, 'gameTest').then(res => console.log(res))

@@ -37,7 +37,7 @@ function getCollection(collection) {
     return db.collection(collection);
 }
 
-function getStates(collection, doc) {
+function getStates(collection, doc, res) {
     return db.collection(collection).doc(doc).collection('states').where('index', '>', 0).get().then(snapshot => {
         //log(snapshot)
         if (snapshot.empty) {
@@ -46,8 +46,11 @@ function getStates(collection, doc) {
         } 
         let result = [];
         snapshot.forEach(function(docx) {
+            console.log(docx.id);
+            //res.send({id: docx.id, data: docx.data()});
             result.push({id: docx.id, data: docx.data()});
         }); 
+        //return;
         return result;
       })
       .catch(err => {

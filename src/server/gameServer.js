@@ -42,7 +42,7 @@ app.get('/newgame', function (req, res) {
 
 app.get('/getstate', function (req, res) {
     let data = req.query;
-    datastorate.getStates(masterID, data.gameid).then(result => {
+    datastorate.getStates(masterID, data.gameid, res).then(result => {
         res.send(result);
     });
 });

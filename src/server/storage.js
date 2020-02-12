@@ -72,7 +72,7 @@ function getLastState(collection, doc, res) {
             result.push({id: docx.id, data: docx.data()});
         }); 
         //return;
-        return result;
+        return result[0];
       })
       .catch(err => {
         log('Error getting documents', err);

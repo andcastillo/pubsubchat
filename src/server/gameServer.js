@@ -42,6 +42,7 @@ app.get('/newgame', function (req, res) {
 
 app.get('/getlaststate', function (req, res) {
     let data = req.query;
+    console.log(data)
     //datastorate.getStates(masterID, data.gameid, res).then(result => {
     datastorate.getLastState(masterID, data.gameid, res).then(result => {
         res.send(result);
@@ -94,10 +95,11 @@ function listenForMessages(subscriptionName, timeout) {
     const messageHandler = message => {
         log(message.data.toString())
         let data = JSON.parse(message.data.toString());
-        let promise = notification.sendMessage(data.next, { gameid: data.gameid, next: message.attributes.sender, name: data.name, state: data.state, index: data.index + 1 }, masterID);
+        let end = data.index >= 9; 
+        let promise = notification.sendMessage(data.next, { gameid: data.gameid, next: message.attributes.sender, name: data.name, state: data.state, index: data.index + 1, end }, masterID);
         promise.then(() => {
             datastorate.writeData(masterID, 
-                {state: JSON.stringify(data.state), sender: message.attributes.sender, index: data.index + 1}, data.gameid, 'states')
+                {state: JSON.stringify(data.state), sender: message.attributes.sender, index: data.index + 1, end}, data.gameid, 'states')
                 .then(() => log(`Updated states of document ${data.gameid}`))
                 .catch(e => log(e))
             // "Ack" (acknowledge receipt of) the message

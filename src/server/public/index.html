@@ -8,7 +8,9 @@
 <body>
 
     <h1>Tic-Tac Toe</h1>
-    <p>Print the last state of the game</p>
+    <p>Report the last state of the game</p>
+    <p>gameid:</p>
+    <p><input type="text" id="gameid"></p>
     <textarea name="textarea" rows="10" cols="50" id="gameobject"></textarea>
     <button onclick="updateGame()">
         Check state
@@ -16,12 +18,26 @@
     <script>
         function updateGame() {
             $.ajax({
-                url: 'http://localhost:3000/getlaststate/?gameid=U19d6lGhXm97GVJIju1x',
-                success: data => {
-                    document.getElementById("gameobject").innerHTML = JSON.stringify(data);
+                url: 'http://localhost:3000/getlaststate/?gameid=' + $("#gameid").val(),
+                success: res => {
+                    document.getElementById("gameobject").innerHTML = JSON.stringify(res);
+
+                    if (res.data.end) {
+                        stopAutoRefresh();
+                    }
+
                 }
             });
         }
+
+        function stopAutoRefresh() {
+            clearInterval(id);
+        }
+
+        var id = setInterval(function() {
+            updateGame();
+        }, 5000);
+
     </script>
 </body>
 
